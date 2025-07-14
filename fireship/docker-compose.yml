@@ -1,0 +1,29 @@
+# provides docker instructions about how to connect and run multi containers tgt
+version: "3" # specify the version of the docker-compose file format
+services: # define the services that make up the application ie. we have 2 services: web and db
+  web:
+    build: . # build a custom img using the Dockerfile in the current directory
+    ports:
+      - "8080:8080"
+  db:
+    image: "mysql" # use the official MySQL image from Docker Hub
+    environment: # note that i can still use environment variables to configure the container
+      MYSQL_ROOT_PASSWORD: password
+    volumes: # take db-data volume created below and mount it to the /foo directory in the container
+      - db-data:/foo
+
+# creates a named volume called db-data
+# this volume will be used to persist data for the MySQL database
+volumes:
+  db-data: # rhs empty as we are only creating a named volume without any specific configuration
+
+# Volumes are used to persist data created and used by Docker containers.
+# Without volumes, any data inside your container would be lost when the container is stopped or deleted.
+
+# 🧠 Key Benefits of Volumes:
+# Persist data across container restarts
+
+# Share data between containers
+
+# Store database files, logs, uploads, etc.
+
