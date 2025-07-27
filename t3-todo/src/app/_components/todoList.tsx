@@ -4,8 +4,9 @@ import { TodoCard } from "./todoCard";
 
 interface Todo {
     id: number;
-    title: string;
+    title: string | null;
     description: string | null;
+    priority: number | null;
     userId: string | null;
     createdAt: Date;
     updatedAt: Date;

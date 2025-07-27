@@ -31,7 +31,7 @@ export default function Home() {
                     <p>Loading...</p>
                 ) : (
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-                        <TodoList todos={todos || []} />
+                            <TodoList todos={todos ?? []} />
                     </div>
                 )}
             </div>
