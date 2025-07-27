@@ -1,4 +1,7 @@
-
-Todo:
-  fireship:
+fireship:
     ☐ make image smaller
+
+t3-todo:
+    ☐ set up prisma for t3-todo for both app and db
+    ☐ deploy t3-todo to vercel
+    ☐ 
