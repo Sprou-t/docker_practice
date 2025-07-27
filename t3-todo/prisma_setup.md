@@ -38,7 +38,7 @@ Replace your local database URL with the Neon connection string in `.env`:
 DATABASE_URL="postgresql://username:password@ep-xxx-xxx-xxx.region.aws.neon.tech/database?sslmode=require"
 ```
 
-### 3. Push Schema to Neon (First Time)
+### 3. Push 1st version of Schema to Neon
 
 ```bash
 npm run db:push
@@ -103,6 +103,61 @@ npx prisma migrate dev --name add_priority_field
 npm run db:studio
 ```
 
+## Safe Rollbacks (Method 2: Manual Rollback)
+
+### ⚠️ Important: This method can cause data loss
+
+### Step 1: Check Migration History
+
+```bash
+npx prisma migrate status
+```
+
+### Step 2: Reset to Specific Migration
+
+```bash
+# ⚠️ WARNING: This will delete data after the target migration
+npx prisma migrate reset --to [migration-name]
+```
+
+Example:
+
+```bash
+npx prisma migrate reset --to 20250727080211_baseline
+```
+
+### Step 3: Reapply Later Migrations (Optional)
+
+If you want to reapply some migrations after the reset:
+
+```bash
+npx prisma migrate deploy
+```
+
+### Step 4: Verify Rollback
+
+```bash
+npm run db:studio
+```
+
+### ⚠️ Safety Tips for Manual Rollbacks
+
+1. **Always backup first**:
+
+   ```bash
+   pg_dump "your-neon-connection-string" > backup_before_rollback.sql
+   ```
+
+2. **Test in development** before production
+
+3. **Check what data will be lost**:
+
+   ```bash
+   npx prisma migrate diff --from-migrations-history --to [target-migration]
+   ```
+
+4. **Consider using Method 1** (revert with new migration) instead
+
 ## Common Commands Reference
 
 ### Database Operations
@@ -122,6 +177,12 @@ npx prisma migrate resolve --applied migration_name
 
 # Reset database (⚠️ WARNING: Deletes all data)
 npx prisma migrate reset
+
+# Reset to specific migration (⚠️ WARNING: Deletes data after target)
+npx prisma migrate reset --to migration_name
+
+# Check migration status
+npx prisma migrate status
 
 # Generate Prisma client
 npx prisma generate
@@ -143,9 +204,18 @@ npm run typecheck
 npm run lint
 ```
 
+## Benefits of This Setup
+
+✅ **Neon Database**
+
+- No local PostgreSQL setup needed
+- Access from anywhere
+- Free tier (0.5GB storage, 10GB transfer/month)
+- Automatic backups
+
 ✅ **Migration History**
 
 - Track all database changes
-- Safe rollbacks
+- Safe rollbacks (with caution)
 - Team collaboration
 - Production deployments
